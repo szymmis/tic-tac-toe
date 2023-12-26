@@ -14,13 +14,16 @@
     "react-dom": "^18.2.0",
     "tsx": "^4.3.0",
     "typescript": "^5.3.2",
-    "vite-express": "*"
+    "vite-express": "*",
+    "ws": "^8.16.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.9.3",
-    "@types/react": "^18.0.38",
     "@types/react-dom": "^18.2.16",
+    "@types/react": "^18.0.38",
+    "@types/ws": "^8.5.10",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.16",
     "nodemon": "^3.0.1",

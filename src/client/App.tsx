@@ -1,6 +1,42 @@
-import { useContext, useState } from "react";
-import { GameBoardState, GameSymbol } from "./types";
+import { useContext, useEffect, useRef, useState } from "react";
+import { GameBoardState, GameSymbol } from "../types";
 import { GameContext } from "./GameContext";
+
+function useWebSocket(onMessage: (msg: Record<string, any>) => void) {
+  const socket = useRef<WebSocket>();
+
+  useEffect(() => {
+    if (!socket.current) {
+      socket.current = new WebSocket(`ws://${location.hostname}:8080`);
+
+      socket.current.addEventListener("open", () => {
+        socket.current?.send(
+          JSON.stringify({
+            action: "auth",
+            payload: { key: "749824798349832497439728439824" },
+          })
+        );
+      });
+
+      socket.current.addEventListener("message", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          onMessage(data);
+        } catch (e) {}
+      });
+    }
+  }, []);
+
+  return {
+    send: (action: string, payload: object) =>
+      socket.current?.send(
+        JSON.stringify({
+          action,
+          payload,
+        })
+      ),
+  };
+}
 
 export default function App() {
   const [turn, setTurn] = useState(0);
@@ -8,14 +44,24 @@ export default function App() {
     [...Array(3)].map(() => [...Array(3)])
   );
 
+  const ws = useWebSocket((msg) => {
+    if (msg.action === "move") {
+      const { x, y, symbol } = msg.payload;
+      gameState[y][x] = symbol;
+      setGameState(gameState);
+      setTurn((c) => c + 1);
+    }
+  });
+
   return (
     <GameContext.Provider
       value={{
         onGameMove(x, y) {
           if (gameState[y][x] === undefined) {
-            gameState[y][x] = turn % 2 === 0 ? "X" : "O";
-            setGameState(gameState);
-            setTurn((c) => c + 1);
+            // gameState[y][x] = turn % 2 === 0 ? "X" : "O";
+            // setGameState(gameState);
+
+            ws.send("move", { x, y });
           }
         },
       }}
