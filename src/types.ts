@@ -1,2 +1,2 @@
 export type GameSymbol = "X" | "O";
-export type GameBoardState = Array<Array<GameSymbol | undefined>>;
+export type GameBoardState = (GameSymbol | undefined)[][];
