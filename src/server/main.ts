@@ -139,7 +139,9 @@ wss.on("connection", (socket) => {
     const event = eventSchema.parse(JSON.parse(msg.toString()));
 
     if (event.action === "connect") {
-      matchmakingQueue.append(new Player(socket, event.name));
+      const player = new Player(socket, event.name);
+      matchmakingQueue.append(player);
+      socket.on("close", () => matchmakingQueue.remove(player));
     }
   });
 });
