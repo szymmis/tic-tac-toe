@@ -3,16 +3,18 @@ import { GameContext } from "./contexts/GameContext";
 import { GameSymbol } from "../types";
 import { RouterProvider, createMemoryRouter } from "react-router";
 import LoginPage from "./pages/LoginPage";
-import WaitingPage from "./pages/WaitingPage";
 import GamePage from "./pages/GamePage";
+import RegisterPage from "./pages/RegisterPage";
+import MainMenuPage from "./pages/MainMenuPage";
 
 const router = createMemoryRouter(
   [
-    { path: "/", element: <LoginPage /> },
-    { path: "/matchmaking", element: <WaitingPage /> },
+    { path: "/", element: <MainMenuPage /> },
+    { path: "/login", element: <LoginPage /> },
+    { path: "/register", element: <RegisterPage /> },
     { path: "/game", element: <GamePage /> },
   ],
-  { initialEntries: ["/"] }
+  { initialEntries: ["/login"] }
 );
 
 export default function App() {
