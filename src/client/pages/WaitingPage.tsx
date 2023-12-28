@@ -1,10 +1,10 @@
+import { useNavigate } from "react-router";
 import Loader from "../components/Loader";
 import { useGameContext } from "../contexts/GameContext";
-import { useRouter } from "../contexts/RouterContext";
 import useGameServer from "../hooks/useGameServer";
 
 export default function WaitingPage() {
-  const { navigate } = useRouter();
+  const navigate = useNavigate();
   const { setGameInfo } = useGameContext();
 
   useGameServer({

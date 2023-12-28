@@ -1,7 +1,19 @@
 import { useState } from "react";
-import Router from "./components/Router";
 import { GameContext } from "./contexts/GameContext";
 import { GameSymbol } from "../types";
+import { RouterProvider, createMemoryRouter } from "react-router";
+import LoginPage from "./pages/LoginPage";
+import WaitingPage from "./pages/WaitingPage";
+import GamePage from "./pages/GamePage";
+
+const router = createMemoryRouter(
+  [
+    { path: "/", element: <LoginPage /> },
+    { path: "/matchmaking", element: <WaitingPage /> },
+    { path: "/game", element: <GamePage /> },
+  ],
+  { initialEntries: ["/"] }
+);
 
 export default function App() {
   const [state, setState] = useState<{
@@ -21,7 +33,7 @@ export default function App() {
         },
       }}
     >
-      <Router />
+      <RouterProvider router={router} />
     </GameContext.Provider>
   );
 }

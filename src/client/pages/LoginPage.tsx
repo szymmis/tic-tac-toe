@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useRouter } from "../contexts/RouterContext";
 import useGameServer from "../hooks/useGameServer";
+import { useNavigate } from "react-router";
 
 export default function LoginPage() {
-  const { navigate } = useRouter();
   const { connect } = useGameServer({});
+  const navigate = useNavigate();
 
   const form = useForm<{ login: string }>();
 
@@ -13,7 +13,7 @@ export default function LoginPage() {
       className="flex flex-col gap-4"
       onSubmit={form.handleSubmit((data) => {
         connect(data.login);
-        navigate("waiting");
+        navigate("matchmaking");
       })}
     >
       <label>
