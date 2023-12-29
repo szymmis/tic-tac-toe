@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import GameBoard from "@/components/GameBoard";
+import Heading from "@/components/Heading";
 import { useGameContext } from "@/contexts/GameContext";
 import useGameServer from "@/hooks/useGameServer";
 import { GameBoardState } from "@/shared/types";
@@ -28,11 +29,14 @@ export default function GamePage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-serif text-4xl font-bold text-center">
-        {turn !== undefined && turn % 2 === (symbol === "X" ? 0 : 1)
-          ? "Your turn"
-          : `${opponent}'s turn`}
-      </h1>
+      <Heading
+        title={
+          turn !== undefined && turn % 2 === (symbol === "X" ? 0 : 1)
+            ? "Your turn"
+            : `${opponent}'s turn`
+        }
+      />
+
       <GameBoard
         state={gameState}
         onMove={(x, y) => {

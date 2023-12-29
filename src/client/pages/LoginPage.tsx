@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import Button from "@/components/Button";
 import Form from "@/components/Form";
+import Heading from "@/components/Heading";
 import Input from "@/components/Input";
 import Link from "@/components/Link";
 
@@ -23,14 +24,14 @@ export default function LoginPage() {
           navigate("/");
         }}
       >
-        <h1 className="mb-2 font-serif text-4xl font-bold text-center">
-          Tic Tac Toe
-        </h1>
+        <Heading title="Tic Tac Toe" />
+
         <div className="flex flex-col gap-2">
           <Input name="login" label="Your name" required />
           <Input name="password" label="Password" required type="password" />
         </div>
-        <Button label="Login" />
+
+        <Button label="Login" className="w-full" />
       </Form>
 
       <p className="mt-6 text-sm">

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import Button from "@/components/Button";
 import Form from "@/components/Form";
+import Heading from "@/components/Heading";
 import Input from "@/components/Input";
 import Link from "@/components/Link";
 
@@ -34,9 +35,8 @@ export default function RegisterPage() {
         schema={schema}
         onValid={() => navigate("/login")}
       >
-        <h1 className="mb-2 font-serif text-4xl font-bold text-center">
-          Register an account
-        </h1>
+        <Heading title="Register an account" />
+
         <div className="flex flex-col gap-y-2">
           <Input name="login" label="Your name" required />
           <Input name="password" label="Password" required type="password" />
@@ -47,6 +47,7 @@ export default function RegisterPage() {
             type="password"
           />
         </div>
+
         <Button label="Create an account" />
       </Form>
       <p className="mt-6 text-sm text-center">

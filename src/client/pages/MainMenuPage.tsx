@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import Button from "@/components/Button";
+import Heading from "@/components/Heading";
 import { useGameContext } from "@/contexts/GameContext";
 import useGameServer from "@/hooks/useGameServer";
 
@@ -19,20 +20,29 @@ export default function MainMenuPage() {
   const [isSearching, setIsSearching] = useState(false);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="font-serif text-3xl font-bold whitespace-nowrap">
-          Hi, Player!
-        </h1>
+    <div className="w-full max-w-md space-y-4">
+      <div className="flex items-center justify-between">
+        <Button
+          label="Logout"
+          variant="secondary"
+          onClick={() => navigate("/login")}
+        />
         <Button
           label={isSearching ? "Looking for a game..." : "Look for a game"}
-          loading={isSearching}
+          loader={isSearching}
           onClick={() => {
-            connect("data.login");
-            setIsSearching(true);
+            if (isSearching) {
+              setIsSearching(false);
+            } else {
+              connect("data.login");
+              setIsSearching(true);
+            }
           }}
         />
       </div>
+
+      <Heading title="Hi, Player!" />
+
       <div>
         <h2 className="mb-3 font-serif text-xl font-bold">
           Your match history
@@ -54,7 +64,7 @@ export default function MainMenuPage() {
             opponent="Player"
             date="28.12.2023"
             duration="3min 12s"
-            outcome="LOSE"
+            outcome="LOSS"
           />
         </ul>
       </div>
@@ -71,7 +81,7 @@ function MatchHistoryEntry({
   opponent: string;
   date: string;
   duration: string;
-  outcome: "WIN" | "LOSE" | "DRAW";
+  outcome: "WIN" | "LOSS" | "DRAW";
 }) {
   return (
     <li>
@@ -87,7 +97,7 @@ function MatchHistoryEntry({
           className={clsx(
             "font-bold uppercase",
             outcome === "WIN" && "text-green-700",
-            outcome === "LOSE" && "text-red-700",
+            outcome === "LOSS" && "text-red-700",
             outcome === "DRAW" && "text-gray-700",
           )}
         >
