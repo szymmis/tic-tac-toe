@@ -9,6 +9,7 @@
     "build": "vite build",
     "lint": "eslint --fix",
     "format": "prettier --write",
+    "typecheck": "tsc -p src/client/tsconfig.json --noEmit && tsc -p src/server/tsconfig.json --noEmit",
     "prepare": "husky install"
   },
   "dependencies": {

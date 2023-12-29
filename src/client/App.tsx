@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 
-import { GameSymbol } from "../types";
-import { GameContext } from "./contexts/GameContext";
-import GamePage from "./pages/GamePage";
-import LoginPage from "./pages/LoginPage";
-import MainMenuPage from "./pages/MainMenuPage";
-import RegisterPage from "./pages/RegisterPage";
+import { GameContext } from "@/contexts/GameContext";
+import GamePage from "@/pages/GamePage";
+import LoginPage from "@/pages/LoginPage";
+import MainMenuPage from "@/pages/MainMenuPage";
+import RegisterPage from "@/pages/RegisterPage";
+import { GameSymbol } from "@/shared/types";
 
 const router = createMemoryRouter(
   [
