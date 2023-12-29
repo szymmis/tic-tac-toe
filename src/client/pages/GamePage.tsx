@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import { GameBoardState } from "../../types";
-import GameBoard from "../components/GameBoard";
-import { useGameContext } from "../contexts/GameContext";
-import useGameServer from "../hooks/useGameServer";
+import GameBoard from "@/components/GameBoard";
+import { useGameContext } from "@/contexts/GameContext";
+import useGameServer from "@/hooks/useGameServer";
+import { GameBoardState } from "@/shared/types";
 
 export default function GamePage() {
   const { symbol, opponent, turn, setGameInfo } = useGameContext();

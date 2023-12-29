@@ -2,9 +2,9 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-import Button from "../components/Button";
-import { useGameContext } from "../contexts/GameContext";
-import useGameServer from "../hooks/useGameServer";
+import Button from "@/components/Button";
+import { useGameContext } from "@/contexts/GameContext";
+import useGameServer from "@/hooks/useGameServer";
 
 export default function MainMenuPage() {
   const navigate = useNavigate();

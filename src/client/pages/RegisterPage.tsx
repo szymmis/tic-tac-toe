@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
-import Button from "../components/Button";
-import Form from "../components/Form";
-import Input from "../components/Input";
-import Link from "../components/Link";
+import Button from "@/components/Button";
+import Form from "@/components/Form";
+import Input from "@/components/Input";
+import Link from "@/components/Link";
 
 const schema = z
   .object({

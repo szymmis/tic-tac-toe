@@ -1,29 +1,28 @@
-import { GameSymbol } from "../../types";
+import { ServerEventSchema, ServerStartEventType } from "@/shared/schemas";
+import { GameSymbol } from "@/shared/types";
+
 import useWebSocket from "./useWebSocket";
 
 export default function useGameServer({
   onGameStart,
   onMove,
 }: {
-  onGameStart?: (msg: unknown) => void;
+  onGameStart?: (msg: ServerStartEventType) => void;
   onMove?: (x: number, y: number, symbol: GameSymbol, turn: number) => void;
 }) {
   const socket = useWebSocket({
     hostname: location.hostname,
     port: 8080,
     onMessage(msg) {
-      if ("action" in (msg as object)) {
-        switch ((msg as Record<string, unknown>)["action"]) {
-          case "start":
-            onGameStart?.(msg);
-            break;
-          case "move": {
-            //TODO: Add Zod validation for those objects
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { x, y, symbol, turn } = msg as any;
-            onMove?.(x, y, symbol, turn);
-            break;
-          }
+      const data = ServerEventSchema.parse(msg);
+      switch (data.action) {
+        case "start":
+          onGameStart?.(data);
+          break;
+        case "move": {
+          const { x, y, symbol, turn } = data;
+          onMove?.(x, y, symbol, turn);
+          break;
         }
       }
     },

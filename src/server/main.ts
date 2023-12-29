@@ -1,9 +1,9 @@
 import express from "express";
 import ViteExpress from "vite-express";
 import { WebSocket, WebSocketServer } from "ws";
-import { z } from "zod";
 
-import { GameBoardState } from "../types.js";
+import { ClientEventSchema } from "@/shared/schemas.js";
+import { GameBoardState } from "@/shared/types.js";
 
 const app = express();
 const wss = new WebSocketServer({ port: 8080 });
@@ -11,19 +11,6 @@ const wss = new WebSocketServer({ port: 8080 });
 ViteExpress.listen(app, 3000, () => {
   console.log("Server is listening on port 3000...");
 });
-
-const moveSchema = z.object({
-  action: z.literal("move"),
-  x: z.number(),
-  y: z.number(),
-});
-
-const connectSchema = z.object({
-  action: z.literal("connect"),
-  name: z.string(),
-});
-
-const eventSchema = z.union([moveSchema, connectSchema]);
 
 class Player {
   public match: Match | null = null;
@@ -33,7 +20,7 @@ class Player {
     public username: string,
   ) {
     this.socket.on("message", (msg) => {
-      const event = eventSchema.parse(JSON.parse(msg.toString()));
+      const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
 
       switch (event.action) {
         case "move": {
@@ -141,7 +128,7 @@ const matchmakingQueue = new MatchmakingQueue();
 
 wss.on("connection", (socket) => {
   socket.on("message", (msg) => {
-    const event = eventSchema.parse(JSON.parse(msg.toString()));
+    const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
 
     if (event.action === "connect") {
       const player = new Player(socket, event.name);

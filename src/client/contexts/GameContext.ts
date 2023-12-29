@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { GameSymbol } from "../../types";
+import { GameSymbol } from "@/shared/types";
 
 export const GameContext = React.createContext(
   {} as {

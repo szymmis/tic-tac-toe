@@ -1,4 +1,4 @@
-import { GameBoardState, GameSymbol } from "../../types";
+import { GameBoardState, GameSymbol } from "@/shared/types";
 
 export default function GameBoard({
   state,
