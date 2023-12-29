@@ -1,9 +1,10 @@
-import { useState } from "react";
-import Button from "../components/Button";
-import useGameServer from "../hooks/useGameServer";
-import { useGameContext } from "../contexts/GameContext";
-import { useNavigate } from "react-router";
 import clsx from "clsx";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+
+import Button from "../components/Button";
+import { useGameContext } from "../contexts/GameContext";
+import useGameServer from "../hooks/useGameServer";
 
 export default function MainMenuPage() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ function MatchHistoryEntry({
             "font-bold uppercase",
             outcome === "WIN" && "text-green-700",
             outcome === "LOSE" && "text-red-700",
-            outcome === "DRAW" && "text-gray-700"
+            outcome === "DRAW" && "text-gray-700",
           )}
         >
           {outcome}

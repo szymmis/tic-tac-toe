@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "nodemon -w src/server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx src/server/main.ts",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint --fix",
+    "format": "prettier --write",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.3",
@@ -25,14 +28,31 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.9.3",
-    "@types/react-dom": "^18.2.16",
     "@types/react": "^18.0.38",
+    "@types/react-dom": "^18.2.16",
     "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "nodemon": "^3.0.1",
     "postcss": "^8.4.32",
+    "prettier": "^3.1.1",
     "tailwindcss": "^3.4.0",
     "vite": "^5.0.2"
+  },
+  "lint-staged": {
+    "*.{json,html,css}": [
+      "npm run format"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "npm run format",
+      "npm run lint"
+    ]
   }
 }

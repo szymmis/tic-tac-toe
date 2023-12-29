@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ZodType, z } from "zod";
+import { z, ZodType } from "zod";
 
 export default function Form<T extends ZodType>({
   schema,
@@ -22,7 +22,7 @@ export default function Form<T extends ZodType>({
         className={className}
         onSubmit={form.handleSubmit(
           (data) => onValid(data),
-          (errs) => console.error(errs)
+          (errs) => console.error(errs),
         )}
       >
         {children}

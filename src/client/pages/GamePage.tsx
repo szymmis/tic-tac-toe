@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { GameBoardState, GameSymbol } from "../../types";
-import { GameContext, useGameContext } from "../contexts/GameContext";
+
+import { GameBoardState } from "../../types";
 import GameBoard from "../components/GameBoard";
+import { useGameContext } from "../contexts/GameContext";
 import useGameServer from "../hooks/useGameServer";
 
 export default function GamePage() {
   const { symbol, opponent, turn, setGameInfo } = useGameContext();
   const [gameState, setGameState] = useState<GameBoardState>(
-    [...Array(3)].map(() => [...Array(3)])
+    [...Array(3)].map(() => [...Array(3)]),
   );
 
   const { move } = useGameServer({

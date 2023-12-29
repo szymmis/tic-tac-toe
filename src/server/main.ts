@@ -2,6 +2,7 @@ import express from "express";
 import ViteExpress from "vite-express";
 import { WebSocket, WebSocketServer } from "ws";
 import { z } from "zod";
+
 import { GameBoardState } from "../types.js";
 
 const app = express();
@@ -27,22 +28,26 @@ const eventSchema = z.union([moveSchema, connectSchema]);
 class Player {
   public match: Match | null = null;
 
-  constructor(public socket: WebSocket, public username: string) {
+  constructor(
+    public socket: WebSocket,
+    public username: string,
+  ) {
     this.socket.on("message", (msg) => {
       const event = eventSchema.parse(JSON.parse(msg.toString()));
 
       switch (event.action) {
-        case "move":
+        case "move": {
           const { x, y } = event;
           this.match?.onMove(this, x, y);
           break;
+        }
       }
     });
   }
 
   send(
     action: "start" | "move" | "win" | "draw" | "lose" | "forfeit",
-    data?: any
+    data?: Record<string, unknown>,
   ) {
     this.socket.send(JSON.stringify({ action, ...data }));
   }

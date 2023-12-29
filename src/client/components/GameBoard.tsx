@@ -1,5 +1,4 @@
 import { GameBoardState, GameSymbol } from "../../types";
-import useGameServer from "../hooks/useGameServer";
 
 export default function GameBoard({
   state,
@@ -32,7 +31,7 @@ export default function GameBoard({
   );
 }
 
-GameBoard.Cell = function ({ symbol }: { symbol: GameSymbol | undefined }) {
+GameBoard.Cell = function Cell({ symbol }: { symbol: GameSymbol | undefined }) {
   switch (symbol) {
     case "X":
       return (
@@ -41,7 +40,7 @@ GameBoard.Cell = function ({ symbol }: { symbol: GameSymbol | undefined }) {
           <path stroke="black" strokeWidth={3} d="M 48,0 L 0,48" />
         </svg>
       );
-    case "O":
+    case "O": {
       const strokeWidth = 3;
       const size = 48 + strokeWidth * 2;
 
@@ -57,6 +56,7 @@ GameBoard.Cell = function ({ symbol }: { symbol: GameSymbol | undefined }) {
           />
         </svg>
       );
+    }
     default:
       return;
   }

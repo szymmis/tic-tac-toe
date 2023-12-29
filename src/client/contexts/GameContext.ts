@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+
 import { GameSymbol } from "../../types";
 
 export const GameContext = React.createContext(
@@ -7,7 +8,7 @@ export const GameContext = React.createContext(
     symbol: GameSymbol | undefined;
     turn: number | undefined;
     setGameInfo: (symbol: GameSymbol, opponent: string, turn: number) => void;
-  }
+  },
 );
 
 export function useGameContext() {

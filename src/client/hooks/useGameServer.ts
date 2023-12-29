@@ -5,7 +5,7 @@ export default function useGameServer({
   onGameStart,
   onMove,
 }: {
-  onGameStart?: (msg: any) => void;
+  onGameStart?: (msg: unknown) => void;
   onMove?: (x: number, y: number, symbol: GameSymbol, turn: number) => void;
 }) {
   const socket = useWebSocket({
@@ -13,14 +13,17 @@ export default function useGameServer({
     port: 8080,
     onMessage(msg) {
       if ("action" in (msg as object)) {
-        switch ((msg as Record<string, any>)["action"]) {
+        switch ((msg as Record<string, unknown>)["action"]) {
           case "start":
             onGameStart?.(msg);
             break;
-          case "move":
+          case "move": {
+            //TODO: Add Zod validation for those objects
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { x, y, symbol, turn } = msg as any;
             onMove?.(x, y, symbol, turn);
             break;
+          }
         }
       }
     },

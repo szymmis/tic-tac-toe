@@ -1,9 +1,9 @@
-import useGameServer from "../hooks/useGameServer";
 import { useNavigate } from "react-router";
-import Button from "../components/Button";
 import { z } from "zod";
-import Input from "../components/Input";
+
+import Button from "../components/Button";
 import Form from "../components/Form";
+import Input from "../components/Input";
 import Link from "../components/Link";
 
 const schema = z
@@ -32,9 +32,7 @@ export default function RegisterPage() {
       <Form
         className="flex flex-col gap-4"
         schema={schema}
-        onValid={(data) => {
-          navigate("/login");
-        }}
+        onValid={() => navigate("/login")}
       >
         <h1 className="mb-2 font-serif text-4xl font-bold text-center">
           Register an account
