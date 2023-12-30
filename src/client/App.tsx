@@ -1,42 +1,29 @@
-import { useState } from "react";
-import { createMemoryRouter, RouterProvider } from "react-router";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter, Route, Routes } from "react-router";
+import { useMeStore } from "stores/useMeStore";
 
-import { GameContext } from "@/contexts/GameContext";
 import GamePage from "@/pages/GamePage";
 import LoginPage from "@/pages/LoginPage";
 import MainMenuPage from "@/pages/MainMenuPage";
 import RegisterPage from "@/pages/RegisterPage";
-import { GameSymbol } from "@/shared/types";
 
-const router = createMemoryRouter(
-  [
-    { path: "/", element: <MainMenuPage /> },
-    { path: "/login", element: <LoginPage /> },
-    { path: "/register", element: <RegisterPage /> },
-    { path: "/game", element: <GamePage /> },
-  ],
-  { initialEntries: ["/login"] },
-);
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
 
 export default function App() {
-  const [state, setState] = useState<{
-    opponent?: string;
-    symbol?: GameSymbol;
-    turn?: number;
-  }>({});
+  const { user } = useMeStore();
 
   return (
-    <GameContext.Provider
-      value={{
-        opponent: state.opponent,
-        symbol: state.symbol,
-        turn: state.turn,
-        setGameInfo(symbol, opponent, turn) {
-          setState({ symbol, opponent, turn });
-        },
-      }}
-    >
-      <RouterProvider router={router} />
-    </GameContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[user ? "/" : "/login"]}>
+        <Routes>
+          <Route path="/" element={<MainMenuPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/game" element={<GamePage />} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 }

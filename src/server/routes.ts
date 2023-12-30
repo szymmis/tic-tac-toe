@@ -1,4 +1,4 @@
-import { BadRequestError } from "errors.js";
+import { BadRequestError, NotFoundError } from "errors.js";
 import { route } from "helpers.js";
 import AuthService from "services/AuthService.js";
 import HashService from "services/HashService.js";
@@ -11,7 +11,8 @@ app.get(
   "/me",
   route(
     async (req) => {
-      return { user: req.user };
+      const { password, ...user } = req.user;
+      return user;
     },
     { public: false },
   ),
@@ -41,12 +42,15 @@ app.post(
         !user ||
         !(await HashService.check(req.body.password, user.password))
       ) {
-        throw new BadRequestError(
-          "Username with that login and password doesn't exist",
+        throw new NotFoundError(
+          "User with that login and password doesn't exist",
         );
       }
 
       AuthService.setCookie(user, res);
+
+      const { password, ...userProps } = user;
+      return userProps;
     },
     { schema: Validations.Login, public: true },
   ),

@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { useGameStateStore } from "stores/useGameStateStore";
 
 import GameBoard from "@/components/GameBoard";
 import Heading from "@/components/Heading";
-import { useGameContext } from "@/contexts/GameContext";
 import useGameServer from "@/hooks/useGameServer";
 import { GameBoardState } from "@/shared/types";
 
 export default function GamePage() {
-  const { symbol, opponent, turn, setGameInfo } = useGameContext();
+  const { symbol, opponent, turn, setGameInfo } = useGameStateStore();
   const [gameState, setGameState] = useState<GameBoardState>(
     [...Array(3)].map(() => [...Array(3)]),
   );
@@ -15,7 +15,7 @@ export default function GamePage() {
   const { move } = useGameServer({
     onMove(x, y, symbol2, turn) {
       if (symbol && opponent) {
-        setGameInfo(symbol, opponent, turn);
+        setGameInfo({ turn });
         setGameState((currState) => {
           const state = structuredClone(currState);
           state[y][x] = symbol2;
@@ -30,6 +30,7 @@ export default function GamePage() {
   return (
     <div>
       <Heading
+        className="text-center"
         title={
           turn !== undefined && turn % 2 === (symbol === "X" ? 0 : 1)
             ? "Your turn"

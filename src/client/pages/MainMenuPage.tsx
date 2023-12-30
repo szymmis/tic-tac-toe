@@ -1,20 +1,21 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useGameStateStore } from "stores/useGameStateStore";
+import { useMeStore } from "stores/useMeStore";
 
 import Button from "@/components/Button";
 import Heading from "@/components/Heading";
-import { useGameContext } from "@/contexts/GameContext";
 import useGameServer from "@/hooks/useGameServer";
 
 export default function MainMenuPage() {
   const navigate = useNavigate();
-  const { setGameInfo } = useGameContext();
+  const { setGameInfo } = useGameStateStore();
+  const { user } = useMeStore();
   const { connect } = useGameServer({
     onGameStart(msg) {
-      console.log(msg);
       navigate("/game");
-      setGameInfo(msg.symbol, msg.opponent, 0);
+      setGameInfo({ symbol: msg.symbol, opponent: msg.opponent, turn: 0 });
     },
   });
   const [isSearching, setIsSearching] = useState(false);
@@ -33,15 +34,15 @@ export default function MainMenuPage() {
           onClick={() => {
             if (isSearching) {
               setIsSearching(false);
-            } else {
-              connect("data.login");
+            } else if (user) {
+              connect(user?.username);
               setIsSearching(true);
             }
           }}
         />
       </div>
 
-      <Heading title="Hi, Player!" />
+      <Heading title={`Hi, ${user?.username}!`} />
 
       <div>
         <h2 className="mb-3 font-serif text-xl font-bold">

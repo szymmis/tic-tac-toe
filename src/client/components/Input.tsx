@@ -12,7 +12,6 @@ export default function Input({ name, label, required, ...props }: InputProps) {
   const form = useFormContext();
 
   const error = form.formState.errors[name];
-  console.log(form.formState.errors);
 
   return (
     <label className="w-full">
