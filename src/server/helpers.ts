@@ -11,7 +11,7 @@ type InferedRequestWithUser<
   P extends boolean,
 > = InferedRequest<T> & { user: P extends true ? User | undefined : User };
 
-export function route<T extends ZodSchema, P extends boolean>(
+export function route<T extends ZodSchema, P extends boolean = false>(
   fn: (
     req: InferedRequestWithUser<T, P>,
     res: Response,

@@ -6,12 +6,14 @@ import { useMeStore } from "stores/useMeStore";
 
 import Button from "@/components/Button";
 import Heading from "@/components/Heading";
+import useLogout from "@/hooks/api/mutations/useLogout";
 import useGameServer from "@/hooks/useGameServer";
 
 export default function MainMenuPage() {
   const navigate = useNavigate();
   const { setGameInfo } = useGameStateStore();
   const { user } = useMeStore();
+  const { mutate: logout } = useLogout();
   const { connect } = useGameServer({
     onGameStart(msg) {
       navigate("/game");
@@ -26,7 +28,9 @@ export default function MainMenuPage() {
         <Button
           label="Logout"
           variant="secondary"
-          onClick={() => navigate("/login")}
+          onClick={() =>
+            logout(undefined, { onSuccess: () => navigate("/login") })
+          }
         />
         <Button
           label={isSearching ? "Looking for a game..." : "Look for a game"}

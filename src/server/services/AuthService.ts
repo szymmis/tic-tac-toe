@@ -15,6 +15,13 @@ export default class AuthService {
     });
   }
 
+  static clearCookie(res: Response) {
+    res.cookie(AUTH_COOKIE_NAME, "", {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    });
+  }
+
   static verify(token: string) {
     return jwt.verify(token, JWT_SECRET) as { id: number } | null;
   }

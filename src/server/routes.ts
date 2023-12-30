@@ -9,13 +9,10 @@ import { app } from "./main.js";
 
 app.get(
   "/me",
-  route(
-    async (req) => {
-      const { password, ...user } = req.user;
-      return user;
-    },
-    { public: false },
-  ),
+  route(async (req) => {
+    const { password, ...user } = req.user;
+    return user;
+  }),
 );
 
 app.post(
@@ -54,4 +51,11 @@ app.post(
     },
     { schema: Validations.Login, public: true },
   ),
+);
+
+app.post(
+  "/logout",
+  route(async (req, res) => {
+    AuthService.clearCookie(res);
+  }),
 );
