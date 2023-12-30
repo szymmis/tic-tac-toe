@@ -6,9 +6,11 @@ import useWebSocket from "./useWebSocket";
 export default function useGameServer({
   onGameStart,
   onMove,
+  onGameEnd,
 }: {
   onGameStart?: (msg: ServerStartEventType) => void;
   onMove?: (x: number, y: number, symbol: GameSymbol, turn: number) => void;
+  onGameEnd?: (outcome: "win" | "loss" | "draw" | "forfeit") => void;
 }) {
   const socket = useWebSocket({
     hostname: location.hostname,
@@ -24,6 +26,12 @@ export default function useGameServer({
           onMove?.(x, y, symbol, turn);
           break;
         }
+        case "win":
+        case "loss":
+        case "draw":
+        case "forfeit":
+          onGameEnd?.(data.action);
+          break;
       }
     },
   });

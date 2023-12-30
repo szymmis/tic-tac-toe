@@ -1,8 +1,6 @@
 import { User } from "services/UsersService.js";
 import WebSocket from "ws";
 
-import { ClientEventSchema } from "@/shared/schemas.js";
-
 import Match from "./Match.js";
 
 export default class Player {
@@ -11,22 +9,10 @@ export default class Player {
   constructor(
     public socket: WebSocket,
     public user: User,
-  ) {
-    this.socket.on("message", (msg) => {
-      const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
-
-      switch (event.action) {
-        case "move": {
-          const { x, y } = event;
-          this.match?.onMove(this, x, y);
-          break;
-        }
-      }
-    });
-  }
+  ) {}
 
   send(
-    action: "start" | "move" | "win" | "draw" | "lose" | "forfeit",
+    action: "start" | "move" | "win" | "draw" | "loss" | "forfeit",
     data?: Record<string, unknown>,
   ) {
     this.socket.send(JSON.stringify({ action, ...data }));

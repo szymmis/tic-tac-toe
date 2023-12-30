@@ -2,6 +2,7 @@ import { BadRequestError, NotFoundError } from "errors.js";
 import { route } from "helpers.js";
 import AuthService from "services/AuthService.js";
 import HashService from "services/HashService.js";
+import MatchHistoryService from "services/MatchHistoryService.js";
 import UsersService from "services/UsersService.js";
 import { Validations } from "validations.js";
 
@@ -11,7 +12,8 @@ app.get(
   "/me",
   route(async (req) => {
     const { password, ...user } = req.user;
-    return user;
+    const history = await MatchHistoryService.getByUserId(user.id);
+    return { user, history };
   }),
 );
 

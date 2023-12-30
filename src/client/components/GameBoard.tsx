@@ -1,3 +1,6 @@
+import clsx from "clsx";
+
+import useIsYourTurn from "@/hooks/useIsYourTurn";
 import { GameBoardState, GameSymbol } from "@/shared/types";
 
 export default function GameBoard({
@@ -7,6 +10,8 @@ export default function GameBoard({
   state: GameBoardState;
   onMove: (x: number, y: number) => void;
 }) {
+  const isYourTurn = useIsYourTurn();
+
   return (
     <table>
       <tbody>
@@ -15,10 +20,11 @@ export default function GameBoard({
             {row.map((cell, x) => (
               <td key={`${y}-${x}`} className="w-24 h-24 border-2">
                 <div
-                  className="flex items-center justify-center w-full h-full cursor-pointer select-none hover:bg-slate-50"
-                  onClick={() => {
-                    onMove(x, y);
-                  }}
+                  className={clsx(
+                    "flex items-center justify-center w-full h-full  select-none ",
+                    isYourTurn && "cursor-pointer hover:bg-slate-50",
+                  )}
+                  onClick={() => onMove(x, y)}
                 >
                   <GameBoard.Cell symbol={cell} />
                 </div>

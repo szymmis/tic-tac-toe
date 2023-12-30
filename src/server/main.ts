@@ -50,6 +50,11 @@ wss.on("connection", async (socket, request) => {
             matchmakingQueue.remove(player);
             break;
           }
+          case "move": {
+            const { x, y } = event;
+            player.match?.onMove(player, x, y);
+            break;
+          }
         }
       });
 

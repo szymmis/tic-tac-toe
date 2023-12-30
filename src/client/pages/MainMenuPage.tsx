@@ -7,11 +7,11 @@ import { useGameStateStore } from "stores/useGameStateStore";
 import Button from "@/components/Button";
 import Heading from "@/components/Heading";
 import useLogout from "@/hooks/api/mutations/useLogout";
-import useMe from "@/hooks/api/queries/useMe";
+import useMe, { HistoryEntry } from "@/hooks/api/queries/useMe";
 import useGameServer from "@/hooks/useGameServer";
 
 export default function MainMenuPage() {
-  useMe();
+  const { data } = useMe();
 
   const navigate = useNavigate();
   const { setGameInfo } = useGameStateStore();
@@ -24,6 +24,8 @@ export default function MainMenuPage() {
     },
   });
   const [isSearching, setIsSearching] = useState(false);
+
+  console.log(data?.history);
 
   return (
     <div className="w-full max-w-md space-y-4">
@@ -57,50 +59,39 @@ export default function MainMenuPage() {
           Your match history
         </h2>
         <ul className="space-y-2">
-          <MatchHistoryEntry
-            opponent="Player"
-            date="28.12.2023"
-            duration="3min 12s"
-            outcome="WIN"
-          />
-          <MatchHistoryEntry
-            opponent="Player"
-            date="28.12.2023"
-            duration="3min 12s"
-            outcome="DRAW"
-          />
-          <MatchHistoryEntry
-            opponent="Player"
-            date="28.12.2023"
-            duration="3min 12s"
-            outcome="LOSS"
-          />
+          {data?.history.map((entry) => (
+            <MatchHistoryEntry key={entry.id} entry={entry} />
+          ))}
         </ul>
       </div>
     </div>
   );
 }
 
-function MatchHistoryEntry({
-  opponent,
-  date,
-  duration,
-  outcome,
-}: {
-  opponent: string;
-  date: string;
-  duration: string;
-  outcome: "WIN" | "LOSS" | "DRAW";
-}) {
+function MatchHistoryEntry({ entry }: { entry: HistoryEntry }) {
+  const { user } = useAuthStore();
+  const outcome = !entry.winner_id
+    ? "DRAW"
+    : user?.id === entry.winner_id
+      ? "WIN"
+      : "LOSS";
+
   return (
     <li>
       <p className="flex justify-between text-sm text-gray-600">
-        <span>{date}</span>
-        <span>{duration}</span>
+        <span>
+          {entry.started_at.split("T")[0].split("-").toReversed().join(".")}
+        </span>
+        <span>
+          {new Date(entry.finished_at).getTime() -
+            new Date(entry.started_at).getTime()}{" "}
+          ms
+        </span>
       </p>
       <p className="flex justify-between">
         <span>
-          <span className="text-xs font-bold text-gray-500">vs</span> {opponent}
+          <span className="text-xs font-bold text-gray-500">vs</span>{" "}
+          {user?.id === entry.o_id ? entry.x_username : entry.o_username}
         </span>
         <span
           className={clsx(

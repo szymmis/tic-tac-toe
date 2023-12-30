@@ -40,4 +40,8 @@ export const ServerEventSchema = z.union([
     symbol: GameSymbolSchema,
     turn: z.number(),
   }),
+  z.object({ action: z.literal("win") }),
+  z.object({ action: z.literal("loss") }),
+  z.object({ action: z.literal("draw") }),
+  z.object({ action: z.literal("forfeit") }),
 ]);

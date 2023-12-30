@@ -1,4 +1,6 @@
-import { GameBoardState } from "@/shared/types.js";
+import MatchHistoryService from "services/MatchHistoryService.js";
+
+import { GameBoardState, GameSymbol } from "@/shared/types.js";
 
 import Player from "./Player.js";
 
@@ -7,6 +9,7 @@ export const matches: Match[] = [];
 export default class Match {
   private pX: Player;
   private pO: Player;
+  private startedAt = new Date();
   private state: GameBoardState;
   private currentPlayer: Player;
   private turn: number = 0;
@@ -23,6 +26,9 @@ export default class Match {
 
     this.pX.match = this;
     this.pO.match = this;
+
+    this.pX.socket.once("close", () => this.forfeit(this.pX));
+    this.pO.socket.once("close", () => this.forfeit(this.pO));
 
     console.log(
       "Match started:",
@@ -49,9 +55,87 @@ export default class Match {
   }
 
   private checkBoard() {
+    for (let y = 0; y < 3; y++) {
+      if (
+        this.state[y][0] !== undefined &&
+        this.state[y][0] === this.state[y][1] &&
+        this.state[y][1] === this.state[y][2]
+      ) {
+        return this.win(this.state[y][0]!);
+      }
+    }
+
+    for (let x = 0; x < 3; x++) {
+      if (
+        this.state[0][x] !== undefined &&
+        this.state[0][x] === this.state[1][x] &&
+        this.state[1][x] === this.state[2][x]
+      ) {
+        return this.win(this.state[0][x]!);
+      }
+    }
+
+    if (
+      this.state[0][0] !== undefined &&
+      this.state[0][0] === this.state[1][1] &&
+      this.state[1][1] === this.state[2][2]
+    ) {
+      return this.win(this.state[0][0]);
+    }
+
+    if (
+      this.state[0][2] !== undefined &&
+      this.state[0][2] === this.state[1][1] &&
+      this.state[1][1] === this.state[2][0]
+    ) {
+      return this.win(this.state[0][2]);
+    }
+
     if (this.turn >= 9) {
-      this.pX.send("draw");
-      this.pO.send("draw");
+      this.draw();
+    }
+  }
+
+  private win(winningSymbol: GameSymbol) {
+    if (winningSymbol === "X") {
+      this.pX.send("win");
+      this.pO.send("loss");
+    } else {
+      this.pX.send("loss");
+      this.pO.send("win");
+    }
+
+    MatchHistoryService.create(
+      this.pX,
+      this.pO,
+      this.startedAt,
+      new Date(),
+      winningSymbol === "X" ? this.pX.user.id : this.pO.user.id,
+    );
+  }
+
+  private draw() {
+    this.pX.send("draw");
+    this.pO.send("draw");
+
+    MatchHistoryService.create(
+      this.pX,
+      this.pO,
+      this.startedAt,
+      new Date(),
+      null,
+    );
+  }
+
+  private forfeit(forfeitingPlayer: Player) {
+    if (forfeitingPlayer.match !== this) return;
+
+    if (forfeitingPlayer === this.pX) {
+      this.pX.send("forfeit");
+      this.pX.match = null;
+    } else {
+      this.pO.send("forfeit");
+      this.pO.match = null;
     }
   }
 

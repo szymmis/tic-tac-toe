@@ -1,41 +1,41 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { useGameStateStore } from "stores/useGameStateStore";
 
 import GameBoard from "@/components/GameBoard";
 import Heading from "@/components/Heading";
 import useGameServer from "@/hooks/useGameServer";
+import useIsYourTurn from "@/hooks/useIsYourTurn";
 import { GameBoardState } from "@/shared/types";
 
 export default function GamePage() {
-  const { symbol, opponent, turn, setGameInfo } = useGameStateStore();
+  const navigate = useNavigate();
+  const { opponent, setGameInfo } = useGameStateStore();
   const [gameState, setGameState] = useState<GameBoardState>(
     [...Array(3)].map(() => [...Array(3)]),
   );
+  const isYourTurn = useIsYourTurn();
 
   const { move } = useGameServer({
-    onMove(x, y, symbol2, turn) {
-      if (symbol && opponent) {
-        setGameInfo({ turn });
-        setGameState((currState) => {
-          const state = structuredClone(currState);
-          state[y][x] = symbol2;
-          return state;
-        });
-      }
+    onMove(x, y, symbol, turn) {
+      setGameInfo({ turn });
+      setGameState((currState) => {
+        const state = structuredClone(currState);
+        state[y][x] = symbol;
+        return state;
+      });
+    },
+    onGameEnd(outcome) {
+      console.log(outcome);
+      navigate("/");
     },
   });
-
-  console.log({ turn }, symbol === "X" ? 0 : 1);
 
   return (
     <div>
       <Heading
         className="text-center"
-        title={
-          turn !== undefined && turn % 2 === (symbol === "X" ? 0 : 1)
-            ? "Your turn"
-            : `${opponent}'s turn`
-        }
+        title={isYourTurn ? "Your turn" : `${opponent}'s turn`}
       />
 
       <GameBoard
