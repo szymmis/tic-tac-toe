@@ -5,7 +5,7 @@ export default class MatchmakingQueue {
   private queue: Player[] = [];
 
   contains(p: Player): boolean {
-    return this.queue.some((el) => el.socket === p.socket);
+    return this.queue.some((el) => el.user.id === p.user.id);
   }
 
   append(p: Player) {
@@ -22,6 +22,6 @@ export default class MatchmakingQueue {
   }
 
   remove(p: Player) {
-    this.queue = this.queue.filter((el) => el.socket !== p.socket);
+    this.queue = this.queue.filter((el) => el.user.id !== p.user.id);
   }
 }
