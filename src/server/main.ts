@@ -1,6 +1,8 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express from "express";
+import AuthService from "services/AuthService.js";
+import UsersService from "services/UsersService.js";
 import ViteExpress from "vite-express";
 import { WebSocketServer } from "ws";
 
@@ -23,16 +25,39 @@ ViteExpress.listen(app, 3000, () => {
 
 const matchmakingQueue = new MatchmakingQueue();
 
-wss.on("connection", (socket) => {
-  socket.on("message", (msg) => {
-    const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
+wss.on("connection", async (socket, request) => {
+  const token = request.headers.cookie?.split("=")[1];
 
-    if (event.action === "connect") {
-      const player = new Player(socket, event.name);
-      matchmakingQueue.append(player);
+  if (token) {
+    const jwt = AuthService.verify(token);
+
+    if (jwt) {
+      const user = await UsersService.getById(jwt.id);
+      console.log("User connected:", user);
+      const player = new Player(socket, user);
+
       socket.on("close", () => matchmakingQueue.remove(player));
+
+      socket.on("message", (msg) => {
+        const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
+
+        switch (event.action) {
+          case "enterQueue": {
+            matchmakingQueue.append(player);
+            break;
+          }
+          case "leaveQueue": {
+            matchmakingQueue.remove(player);
+            break;
+          }
+        }
+      });
+
+      return;
     }
-  });
+  }
+
+  socket.close();
 });
 
 export { app, db };

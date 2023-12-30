@@ -29,8 +29,11 @@ export default function useGameServer({
   });
 
   return {
-    connect: (name: string) => {
-      socket.send({ action: "connect", name });
+    enterQueue: () => {
+      socket.send({ action: "enterQueue" });
+    },
+    leaveQueue: () => {
+      socket.send({ action: "leaveQueue" });
     },
     move: (x: number, y: number) => {
       socket.send({ action: "move", x, y });

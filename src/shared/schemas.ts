@@ -5,13 +5,15 @@ import { z } from "zod";
  */
 export const ClientEventSchema = z.union([
   z.object({
+    action: z.literal("enterQueue"),
+  }),
+  z.object({
+    action: z.literal("leaveQueue"),
+  }),
+  z.object({
     action: z.literal("move"),
     x: z.number(),
     y: z.number(),
-  }),
-  z.object({
-    action: z.literal("connect"),
-    name: z.string(),
   }),
 ]);
 

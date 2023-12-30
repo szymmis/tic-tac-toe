@@ -1,3 +1,4 @@
+import { User } from "services/UsersService.js";
 import WebSocket from "ws";
 
 import { ClientEventSchema } from "@/shared/schemas.js";
@@ -9,7 +10,7 @@ export default class Player {
 
   constructor(
     public socket: WebSocket,
-    public username: string,
+    public user: User,
   ) {
     this.socket.on("message", (msg) => {
       const event = ClientEventSchema.parse(JSON.parse(msg.toString()));

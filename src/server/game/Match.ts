@@ -18,18 +18,25 @@ export default class Match {
 
     this.state = [...Array(3)].map(() => [...Array(3)]);
 
-    this.pX.send("start", { symbol: "X", opponent: this.pO.username });
-    this.pO.send("start", { symbol: "O", opponent: this.pX.username });
+    this.pX.send("start", { symbol: "X", opponent: this.pO.user.username });
+    this.pO.send("start", { symbol: "O", opponent: this.pX.user.username });
 
     this.pX.match = this;
     this.pO.match = this;
+
+    console.log(
+      "Match started:",
+      this.pX.user.username,
+      "vs",
+      this.pO.user.username,
+    );
 
     this.currentPlayer = this.pX;
   }
 
   onMove(player: Player, x: number, y: number) {
     if (player === this.currentPlayer) {
-      console.log(player, x, y);
+      console.log(player.user.username, x, y);
 
       this.turn++;
       this.state[y][x] = this.getSymbol();

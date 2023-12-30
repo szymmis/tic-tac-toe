@@ -10,7 +10,7 @@ export default class AuthService {
     const token = jwt.sign({ id: user.id }, JWT_SECRET);
 
     res.cookie(AUTH_COOKIE_NAME, token, {
-      expires: new Date(Date.now() + 1000 * 60 * 15),
+      expires: new Date(Date.now() + 1000 * 60 * 60),
       httpOnly: true,
     });
   }

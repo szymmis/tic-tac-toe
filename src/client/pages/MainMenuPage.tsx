@@ -12,11 +12,12 @@ import useGameServer from "@/hooks/useGameServer";
 
 export default function MainMenuPage() {
   useMe();
+
   const navigate = useNavigate();
   const { setGameInfo } = useGameStateStore();
   const { user } = useAuthStore();
   const { mutate: logout } = useLogout();
-  const { connect } = useGameServer({
+  const { enterQueue, leaveQueue } = useGameServer({
     onGameStart(msg) {
       navigate("/game");
       setGameInfo({ symbol: msg.symbol, opponent: msg.opponent, turn: 0 });
@@ -40,9 +41,10 @@ export default function MainMenuPage() {
           onClick={() => {
             if (isSearching) {
               setIsSearching(false);
+              leaveQueue();
             } else if (user) {
-              connect(user?.username);
               setIsSearching(true);
+              enterQueue();
             }
           }}
         />
