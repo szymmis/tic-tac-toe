@@ -4,7 +4,7 @@ import Player from "game/Player.js";
 export default class MatchHistoryService {
   static getByUserId(userId: number) {
     return db.all(
-      "SELECT match_history.*, u1.username as x_username, u2.username as o_username FROM match_history JOIN users as u1 ON match_history.x_id = u1.id JOIN users as u2 ON match_history.o_id = u2.id WHERE x_id = ? OR o_id = ?",
+      "SELECT match_history.*, u1.username as x_username, u2.username as o_username FROM match_history JOIN users as u1 ON match_history.x_id = u1.id JOIN users as u2 ON match_history.o_id = u2.id WHERE x_id = ? OR o_id = ? ORDER BY started_at DESC",
       [userId, userId],
     );
   }
