@@ -1,18 +1,20 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuthStore } from "stores/useAuthStore";
 import { useGameStateStore } from "stores/useGameStateStore";
-import { useMeStore } from "stores/useMeStore";
 
 import Button from "@/components/Button";
 import Heading from "@/components/Heading";
 import useLogout from "@/hooks/api/mutations/useLogout";
+import useMe from "@/hooks/api/queries/useMe";
 import useGameServer from "@/hooks/useGameServer";
 
 export default function MainMenuPage() {
+  useMe();
   const navigate = useNavigate();
   const { setGameInfo } = useGameStateStore();
-  const { user } = useMeStore();
+  const { user } = useAuthStore();
   const { mutate: logout } = useLogout();
   const { connect } = useGameServer({
     onGameStart(msg) {

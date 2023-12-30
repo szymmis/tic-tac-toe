@@ -1,9 +1,9 @@
 import { useMutation } from "react-query";
 import { ApiService, RequestError } from "services/ApiService";
-import { useMeStore } from "stores/useMeStore";
+import { useAuthStore } from "stores/useAuthStore";
 
 export default function useLogout() {
-  const { logout } = useMeStore();
+  const { logout } = useAuthStore();
 
   return useMutation<void, RequestError>(async () => {
     await ApiService.post("/logout", {});

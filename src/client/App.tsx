@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { useMeStore } from "stores/useMeStore";
+import { useAuthStore } from "stores/useAuthStore";
 
 import GamePage from "@/pages/GamePage";
 import LoginPage from "@/pages/LoginPage";
@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
-  const { user } = useMeStore();
+  const { user } = useAuthStore();
 
   return (
     <QueryClientProvider client={queryClient}>

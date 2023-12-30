@@ -1,9 +1,9 @@
 import { useMutation } from "react-query";
 import { ApiService, RequestError } from "services/ApiService";
-import { useMeStore } from "stores/useMeStore";
+import { useAuthStore } from "stores/useAuthStore";
 
 export default function useLogin() {
-  const { login } = useMeStore();
+  const { login } = useAuthStore();
 
   return useMutation<
     { id: number; username: string },

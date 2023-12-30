@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 type User = { id: number; username: string };
 
-export const useMeStore = create(
+export const useAuthStore = create(
   persist<{
     user: User | undefined;
     login: (user: User) => void;

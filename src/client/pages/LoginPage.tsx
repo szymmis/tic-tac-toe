@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { RequestError } from "services/ApiService";
-import { useMeStore } from "stores/useMeStore";
+import { useAuthStore } from "stores/useAuthStore";
 import { z } from "zod";
 
 import Alert from "@/components/Alert";
@@ -21,7 +21,7 @@ export default function LoginPage() {
   const [error, setError] = useState<RequestError>();
   const { mutate: login } = useLogin();
   const navigate = useNavigate();
-  const meStore = useMeStore();
+  const meStore = useAuthStore();
 
   return (
     <div>
