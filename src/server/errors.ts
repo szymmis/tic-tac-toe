@@ -22,3 +22,9 @@ export class NotFoundError extends HttpError {
     super(404, msg ?? "Not found");
   }
 }
+
+export class UnauthorizedError extends HttpError {
+  constructor(msg?: string) {
+    super(401, msg ?? "Unauthorized");
+  }
+}

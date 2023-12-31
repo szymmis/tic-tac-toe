@@ -1,3 +1,4 @@
+import { NotFoundError, UnauthorizedError } from "errors.js";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import UsersService, { User } from "services/UsersService.js";
@@ -29,7 +30,13 @@ export default class AuthService {
   static async getUserFromRequest(req: Request) {
     const token = this.verify(req.cookies[AUTH_COOKIE_NAME]);
     if (token) {
-      return UsersService.getById(token.id);
+      try {
+        return UsersService.getById(token.id);
+      } catch (e) {
+        if (e instanceof NotFoundError) {
+          throw new UnauthorizedError();
+        } else throw e;
+      }
     } else {
       throw new Error();
     }

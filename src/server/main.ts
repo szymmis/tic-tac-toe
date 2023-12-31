@@ -65,6 +65,7 @@ wss.on("connection", async (socket, request) => {
   socket.close();
 });
 
-export { app, db };
+import { registerRoutes } from "routes.js";
+registerRoutes(app);
 
-import("routes.js");
+export { app, db };

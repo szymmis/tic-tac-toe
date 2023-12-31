@@ -3,7 +3,10 @@ import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 import { fileURLToPath } from "url";
 
-const db = await open({ filename: "data.db", driver: sqlite3.Database });
+const db = await open({
+  filename: process.env.DB_FILE ?? "data.db",
+  driver: sqlite3.Database,
+});
 
 await db.migrate({
   migrationsPath: join(dirname(fileURLToPath(import.meta.url)), "migrations"),
