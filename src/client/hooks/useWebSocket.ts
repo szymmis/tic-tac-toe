@@ -12,10 +12,27 @@ export default function useWebSocket<T = unknown>(options: {
 }) {
   const { hostname, port, onOpen, onMessage, onError, onClose } = options;
 
+  const open = () => {
+    if (
+      !socket.current ||
+      socket.current.readyState === socket.current.CLOSED
+    ) {
+      console.log("Openning socket connection");
+      socket.current = new WebSocket(`ws://${hostname}:${port}`);
+      socket.current.addEventListener("open", () => onOpen?.());
+      socket.current.addEventListener("error", () => onError?.());
+      socket.current.addEventListener("close", () => onClose?.());
+    }
+  };
+
   const send = (message: unknown) =>
     socket.current?.send(JSON.stringify(message));
 
+  const close = () => socket.current?.close();
+
   useEffect(() => {
+    open();
+
     const messageHandler = (e: MessageEvent) => {
       try {
         onMessage?.(JSON.parse(e.data));
@@ -24,19 +41,12 @@ export default function useWebSocket<T = unknown>(options: {
       }
     };
 
-    if (!socket.current) {
-      socket.current = new WebSocket(`ws://${hostname}:${port}`);
-
-      socket.current.addEventListener("open", () => onOpen?.());
-      socket.current.addEventListener("error", () => onError?.());
-      socket.current.addEventListener("close", () => onClose?.());
-    }
-
     socket.current.addEventListener("message", messageHandler);
     () => socket.current.removeEventListener("message", messageHandler);
   }, []);
 
   return {
     send,
+    close,
   };
 }

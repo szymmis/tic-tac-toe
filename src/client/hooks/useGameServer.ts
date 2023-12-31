@@ -46,5 +46,6 @@ export default function useGameServer({
     move: (x: number, y: number) => {
       socket.send({ action: "move", x, y });
     },
+    disconnect: () => socket.close(),
   };
 }
