@@ -10,7 +10,7 @@ import useIsYourTurn from "@/hooks/useIsYourTurn";
 import { GameBoardState } from "@/shared/types";
 
 export default function GamePage() {
-  const { opponent, setGameInfo } = useGameStateStore();
+  const { symbol, opponent, setGameInfo } = useGameStateStore();
   const [outcome, setOutcome] = useState<string>();
   const [gameState, setGameState] = useState<GameBoardState>(
     [...Array(3)].map(() => [...Array(3)]),
@@ -37,6 +37,18 @@ export default function GamePage() {
         className="text-center"
         title={isYourTurn ? "Your turn" : `${opponent}'s turn`}
       />
+
+      <p className="relative flex justify-between">
+        <span>
+          <b className="text-xs">{symbol}</b> You
+        </span>{" "}
+        <span className="absolute self-center w-full text-xs font-bold text-center text-gray-400">
+          vs
+        </span>
+        <span>
+          {opponent} <b className="text-xs">{symbol === "X" ? "O" : "X"}</b>
+        </span>
+      </p>
 
       <GameBoard
         state={gameState}

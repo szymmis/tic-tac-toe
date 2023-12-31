@@ -35,9 +35,9 @@ export default function RegisterPage() {
   const [error, setError] = useState<RequestError>();
 
   return (
-    <div>
+    <div className="flex-1">
       <Form
-        className="flex flex-col gap-4"
+        className="flex flex-col max-w-sm gap-4 mx-auto"
         schema={schema}
         onValid={(data) =>
           register(data, {
@@ -49,7 +49,7 @@ export default function RegisterPage() {
           })
         }
       >
-        <Heading title="Register an account" />
+        <Heading title="Register an account" className="text-center" />
 
         {error?.code === 400 && <Alert title="Username is already taken" />}
 

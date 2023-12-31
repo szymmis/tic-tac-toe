@@ -24,9 +24,9 @@ export default function LoginPage() {
   const meStore = useAuthStore();
 
   return (
-    <div>
+    <div className="flex-1">
       <Form
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col items-center w-full max-w-sm gap-4 mx-auto"
         schema={schema}
         onValid={(data) => {
           login(data, {
@@ -44,7 +44,7 @@ export default function LoginPage() {
           <Alert title="User with that login and password does not exist" />
         )}
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col w-full gap-2">
           <Input name="login" label="Your name" required />
           <Input name="password" label="Password" required type="password" />
           <Button label="Login" className="w-full mt-2" />
