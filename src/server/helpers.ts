@@ -1,5 +1,6 @@
 import { HttpError } from "errors.js";
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import AuthService from "services/AuthService.js";
 import { User } from "services/UsersService.js";
 import { z, ZodError, ZodSchema } from "zod";
@@ -22,11 +23,24 @@ export function route<T extends ZodSchema, P extends boolean = false>(
   },
 ) {
   return async (req: Request, res: Response) => {
-    if (req.cookies["auth_token"]) {
-      const user = await AuthService.getUserFromRequest(req);
-      (req as Request & { user: User }).user = user;
-    } else if (!options?.public) {
-      return res.status(401).send(new HttpError(401, "Unauthorized").toJSON());
+    try {
+      if (req.cookies["auth_token"]) {
+        const user = await AuthService.getUserFromRequest(req);
+        (req as Request & { user: User }).user = user;
+      } else if (!options?.public) {
+        throw new HttpError(401, "Unauthorized");
+      }
+    } catch (e) {
+      if (!options?.public) {
+        if (e instanceof HttpError) {
+          return res.status(e.code).send(e.toJSON());
+        } else if (e instanceof jwt.JsonWebTokenError) {
+          return res.status(401).send({ message: "Unauthorized" });
+        } else {
+          console.error(e);
+          return res.status(500).end();
+        }
+      }
     }
 
     try {

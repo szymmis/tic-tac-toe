@@ -1,4 +1,4 @@
-import { NotFoundError, UnauthorizedError } from "errors.js";
+import { UnauthorizedError } from "errors.js";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import UsersService, { User } from "services/UsersService.js";
@@ -30,15 +30,16 @@ export default class AuthService {
   static async getUserFromRequest(req: Request) {
     const token = this.verify(req.cookies[AUTH_COOKIE_NAME]);
     if (token) {
-      try {
-        return UsersService.getById(token.id);
-      } catch (e) {
-        if (e instanceof NotFoundError) {
-          throw new UnauthorizedError();
-        } else throw e;
-      }
+      return UsersService.getById(token.id);
     } else {
-      throw new Error();
+      throw new UnauthorizedError();
     }
+  }
+
+  static getTokenFromCookieHeader(cookie: string | undefined) {
+    return cookie
+      ?.split(";")
+      .map((cookie) => cookie.split("="))
+      .find(([key]) => key === AUTH_COOKIE_NAME)?.[1];
   }
 }

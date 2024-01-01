@@ -1,6 +1,8 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { HttpError } from "errors.js";
 import express from "express";
+import { registerRoutes } from "routes.js";
 import AuthService from "services/AuthService.js";
 import UsersService from "services/UsersService.js";
 import ViteExpress from "vite-express";
@@ -28,46 +30,50 @@ ViteExpress.listen(app, port, () => {
 const matchmakingQueue = new MatchmakingQueue();
 
 wss.on("connection", async (socket, request) => {
-  const token = request.headers.cookie?.split("=")[1];
+  const token = AuthService.getTokenFromCookieHeader(request.headers.cookie);
 
   if (token) {
-    const jwt = AuthService.verify(token);
+    try {
+      const jwt = AuthService.verify(token);
 
-    if (jwt) {
-      const user = await UsersService.getById(jwt.id);
-      console.log("User connected:", user);
-      const player = new Player(socket, user);
+      if (jwt) {
+        const user = await UsersService.getById(jwt.id);
+        console.log("User connected:", user);
+        const player = new Player(socket, user);
 
-      socket.on("close", () => matchmakingQueue.remove(player));
+        socket.on("close", () => matchmakingQueue.remove(player));
 
-      socket.on("message", (msg) => {
-        const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
+        socket.on("message", (msg) => {
+          const event = ClientEventSchema.parse(JSON.parse(msg.toString()));
 
-        switch (event.action) {
-          case "enterQueue": {
-            matchmakingQueue.append(player);
-            break;
+          switch (event.action) {
+            case "enterQueue": {
+              matchmakingQueue.append(player);
+              break;
+            }
+            case "leaveQueue": {
+              matchmakingQueue.remove(player);
+              break;
+            }
+            case "move": {
+              const { x, y } = event;
+              player.match?.onMove(player, x, y);
+              break;
+            }
           }
-          case "leaveQueue": {
-            matchmakingQueue.remove(player);
-            break;
-          }
-          case "move": {
-            const { x, y } = event;
-            player.match?.onMove(player, x, y);
-            break;
-          }
-        }
-      });
+        });
 
-      return;
+        return;
+      }
+    } catch (e) {
+      if (!(e instanceof HttpError)) console.error(e);
+      return socket.close();
     }
   }
 
   socket.close();
 });
 
-import { registerRoutes } from "routes.js";
 registerRoutes(app);
 
 export { app, db };
