@@ -57,8 +57,11 @@ export function registerRoutes(app: Express) {
 
   app.post(
     "/logout",
-    route(async (req, res) => {
-      AuthService.clearCookie(res);
-    }),
+    route(
+      async (req, res) => {
+        AuthService.clearCookie(res);
+      },
+      { public: true },
+    ),
   );
 }
