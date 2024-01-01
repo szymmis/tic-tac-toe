@@ -19,13 +19,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(ViteExpress.static());
 
-const wss = new WebSocketServer({ port: 8080 });
-
 const port = Number(process.env.PORT) || 3000;
 
-ViteExpress.listen(app, port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
 });
+const wss = new WebSocketServer({ server });
+ViteExpress.bind(app, server);
 
 const matchmakingQueue = new MatchmakingQueue();
 

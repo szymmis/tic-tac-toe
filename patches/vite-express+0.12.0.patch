@@ -1,0 +1,13 @@
+diff --git a/node_modules/vite-express/dist/main.js b/node_modules/vite-express/dist/main.js
+index 1640584..1dd79c0 100644
+--- a/node_modules/vite-express/dist/main.js
++++ b/node_modules/vite-express/dist/main.js
+@@ -220,7 +220,7 @@ function startServer(server) {
+             appType: "custom",
+             server: {
+                 middlewareMode: true,
+-                hmr: { server },
++                // hmr: { server },
+             },
+         }));
+         server.on("close", () => __awaiter(this, void 0, void 0, function* () {

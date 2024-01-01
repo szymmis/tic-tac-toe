@@ -3,14 +3,13 @@ import { createRef, useEffect } from "react";
 const socket = createRef() as React.MutableRefObject<WebSocket>;
 
 export default function useWebSocket<T = unknown>(options: {
-  hostname: string;
-  port: number;
+  host: string;
   onOpen?: () => void;
   onMessage?: (msg: T) => void;
   onError?: () => void;
   onClose?: () => void;
 }) {
-  const { hostname, port, onOpen, onMessage, onError, onClose } = options;
+  const { host, onOpen, onMessage, onError, onClose } = options;
 
   const open = () => {
     if (
@@ -19,9 +18,7 @@ export default function useWebSocket<T = unknown>(options: {
     ) {
       console.log("Openning socket connection");
       socket.current = new WebSocket(
-        `${
-          location.protocol === "https:" ? "wss" : "ws"
-        }://${hostname}:${port}`,
+        `${location.protocol === "https:" ? "wss" : "ws"}://${host}`,
       );
       socket.current.addEventListener("open", () => onOpen?.());
       socket.current.addEventListener("error", () => onError?.());

@@ -13,8 +13,7 @@ export default function useGameServer({
   onGameEnd?: (outcome: "win" | "loss" | "draw" | "forfeit") => void;
 }) {
   const socket = useWebSocket({
-    hostname: location.hostname,
-    port: 8080,
+    host: location.host,
     onMessage(msg) {
       const data = ServerEventSchema.parse(msg);
       switch (data.action) {
