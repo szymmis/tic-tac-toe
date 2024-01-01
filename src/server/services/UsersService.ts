@@ -10,6 +10,10 @@ export type User = {
 };
 
 export default class UsersService {
+  static async findById(id: number) {
+    return db.get<User>("SELECT * FROM users WHERE id = ?", [id]);
+  }
+
   static async getById(id: number) {
     const user = await db.get<User>("SELECT * FROM users WHERE id = ?", [id]);
     if (!user) {

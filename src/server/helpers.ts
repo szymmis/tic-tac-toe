@@ -1,4 +1,4 @@
-import { HttpError } from "errors.js";
+import { HttpError, UnauthorizedError } from "errors.js";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import AuthService from "services/AuthService.js";
@@ -26,9 +26,10 @@ export function route<T extends ZodSchema, P extends boolean = false>(
     try {
       if (req.cookies["auth_token"]) {
         const user = await AuthService.getUserFromRequest(req);
+        if (!user) throw new UnauthorizedError();
         (req as Request & { user: User }).user = user;
       } else if (!options?.public) {
-        throw new HttpError(401, "Unauthorized");
+        throw new UnauthorizedError();
       }
     } catch (e) {
       if (!options?.public) {

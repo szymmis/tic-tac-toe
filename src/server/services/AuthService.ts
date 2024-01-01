@@ -30,7 +30,7 @@ export default class AuthService {
   static async getUserFromRequest(req: Request) {
     const token = this.verify(req.cookies[AUTH_COOKIE_NAME]);
     if (token) {
-      return UsersService.getById(token.id);
+      return UsersService.findById(token.id);
     } else {
       throw new UnauthorizedError();
     }
