@@ -2,11 +2,11 @@
 
 > WebSocket tic tac toe implementation
 
+![Game preview](media/game.gif)
+
 ## 💬 Introduction
 
 This is a websocket implementation of a popular tic tac toe game based on a `React` frontend and `Express` backend glued together by [`vite-express`](https://github.com/szymmis/vite-express). Among the features apart from the obvious one is registration, authorization and match history recording.
-
-![Game preview](media/game.gif)
 
 ## 🔧 Setup
 
