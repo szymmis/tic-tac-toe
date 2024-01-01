@@ -18,7 +18,11 @@ export default function useWebSocket<T = unknown>(options: {
       socket.current.readyState === socket.current.CLOSED
     ) {
       console.log("Openning socket connection");
-      socket.current = new WebSocket(`ws://${hostname}:${port}`);
+      socket.current = new WebSocket(
+        `${
+          location.protocol === "https:" ? "wss" : "ws"
+        }://${hostname}:${port}`,
+      );
       socket.current.addEventListener("open", () => onOpen?.());
       socket.current.addEventListener("error", () => onError?.());
       socket.current.addEventListener("close", () => onClose?.());
