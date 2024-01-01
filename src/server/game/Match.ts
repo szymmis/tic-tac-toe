@@ -131,12 +131,20 @@ export default class Match {
     if (forfeitingPlayer.match !== this) return;
 
     if (forfeitingPlayer === this.pX) {
-      this.pX.send("forfeit");
-      this.pX.match = null;
-    } else {
       this.pO.send("forfeit");
       this.pO.match = null;
+    } else {
+      this.pX.send("forfeit");
+      this.pX.match = null;
     }
+
+    MatchHistoryService.create(
+      this.pX,
+      this.pO,
+      this.startedAt,
+      new Date(),
+      forfeitingPlayer === this.pX ? this.pO.user.id : this.pX.user.id,
+    );
   }
 
   private getSymbol() {

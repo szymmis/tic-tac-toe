@@ -5,6 +5,7 @@ import { useGameStateStore } from "stores/useGameStateStore";
 import Button from "@/components/Button";
 import GameBoard from "@/components/GameBoard";
 import Heading from "@/components/Heading";
+import useMe from "@/hooks/api/queries/useMe";
 import useGameServer from "@/hooks/useGameServer";
 import useIsYourTurn from "@/hooks/useIsYourTurn";
 import { GameBoardState } from "@/shared/types";
@@ -16,6 +17,7 @@ export default function GamePage() {
     [...Array(3)].map(() => [...Array(3)]),
   );
   const isYourTurn = useIsYourTurn();
+  const { refetch } = useMe();
 
   const { move } = useGameServer({
     onMove(x, y, symbol, turn) {
@@ -27,6 +29,7 @@ export default function GamePage() {
       });
     },
     onGameEnd(outcome) {
+      refetch();
       setOutcome(outcome);
     },
   });
@@ -82,7 +85,7 @@ function OutcomeOverlay({ outcome }: { outcome: string }) {
 
   return (
     <div className="absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full gap-2 backdrop-blur-sm">
-      <Heading title={label} />
+      <Heading title={label} className="text-center" />
       <Button label="Continue" onClick={() => navigate("/")} />
     </div>
   );
