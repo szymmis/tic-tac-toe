@@ -49,7 +49,7 @@ MatchHistory.Entry = function Entry({ entry }: { entry: HistoryEntry }) {
         <span>{dayjs(entry.started_at).format("DD MMM YYYY")}</span>
         <span>
           {duration.minutes > 0
-            ? `${duration.minutes}min ${duration.seconds}s`
+            ? `${duration.minutes}min ${duration.seconds % 60}s`
             : `${duration.seconds}s`}
         </span>
       </p>
