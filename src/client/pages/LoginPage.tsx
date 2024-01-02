@@ -19,7 +19,7 @@ const schema = z.object({
 
 export default function LoginPage() {
   const [error, setError] = useState<RequestError>();
-  const { mutate: login } = useLogin();
+  const { mutate: login, isLoading } = useLogin();
   const navigate = useNavigate();
   const meStore = useAuthStore();
 
@@ -47,7 +47,7 @@ export default function LoginPage() {
         <div className="flex flex-col w-full gap-2">
           <Input name="login" label="Your name" required />
           <Input name="password" label="Password" required type="password" />
-          <Button label="Login" className="w-full mt-2" />
+          <Button label="Login" className="w-full mt-2" loading={isLoading} />
         </div>
       </Form>
 

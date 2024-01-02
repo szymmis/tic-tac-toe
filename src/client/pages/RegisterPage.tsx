@@ -31,7 +31,7 @@ const schema = z
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { mutate: register } = useRegister();
+  const { mutate: register, isLoading } = useRegister();
   const [error, setError] = useState<RequestError>();
 
   return (
@@ -64,7 +64,7 @@ export default function RegisterPage() {
           />
         </div>
 
-        <Button label="Create an account" />
+        <Button label="Create an account" loading={isLoading} />
       </Form>
       <p className="mt-6 text-sm text-center">
         Already have an account?{" "}
