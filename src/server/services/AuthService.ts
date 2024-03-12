@@ -1,3 +1,4 @@
+import cookie from "cookie";
 import { UnauthorizedError } from "errors.js";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -36,10 +37,7 @@ export default class AuthService {
     }
   }
 
-  static getTokenFromCookieHeader(cookie: string | undefined) {
-    return cookie
-      ?.split(";")
-      .map((cookie) => cookie.split("="))
-      .find(([key]) => key === AUTH_COOKIE_NAME)?.[1];
+  static getTokenFromCookieHeader(header: string | undefined) {
+    return header ? cookie.parse(header)[AUTH_COOKIE_NAME] : undefined;
   }
 }
